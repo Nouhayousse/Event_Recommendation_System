@@ -1,0 +1,21 @@
+
+services:
+
+  postgres:
+    image: postgres:16
+
+    container_name: seminar_postgres
+
+    environment:
+      POSTGRES_USER: nouhaila
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: seminar_db
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - tamtrack-seminar-recommender_postgres_data:/var/lib/postgresql/data
+
+volumes:
+  tamtrack-seminar-recommender_postgres_data:
