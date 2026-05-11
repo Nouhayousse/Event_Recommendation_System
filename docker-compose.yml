@@ -17,5 +17,13 @@ services:
     volumes:
       - tamtrack-seminar-recommender_postgres_data:/var/lib/postgresql/data
 
+  redis:
+    image: redis:latest
+
+    container_name: seminar_redis
+
+    ports:
+      - "6379:6379"    
+
 volumes:
   tamtrack-seminar-recommender_postgres_data:

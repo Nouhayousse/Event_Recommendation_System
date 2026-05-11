@@ -8,14 +8,25 @@ from sqlalchemy import (
 )
 
 from sqlalchemy.orm import relationship
+from sqlalchemy import UniqueConstraint
+
 
 from app.database.base import Base
 
 class Seminar(Base):
 
     __tablename__ = "seminars"
+    __table_args__ = (
+
+    UniqueConstraint(
+        "source",
+        "external_event_id",
+        name="unique_source_event"
+    ),
+    )
 
     id = Column(Integer, primary_key=True, index=True)
+    external_event_id = Column(String)
 
     title = Column(String, nullable=False)
 
@@ -47,3 +58,5 @@ class Seminar(Base):
         "Recommendation",
         back_populates="seminar"
     )
+
+    
