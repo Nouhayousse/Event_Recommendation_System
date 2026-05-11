@@ -1,4 +1,5 @@
 from datetime import datetime
+import pytz
 
 
 class MeetupNormalizer:
@@ -9,9 +10,9 @@ class MeetupNormalizer:
 
         cleaned_date = raw_date.split("[")[0]
 
-        start_date = datetime.fromisoformat(
-            cleaned_date
-        )
+        parsed_date = datetime.fromisoformat(cleaned_date)
+        morocco_tz = pytz.timezone("Africa/Casablanca")
+        start_date = parsed_date.astimezone(morocco_tz)
 
         event_format = (
             "online"

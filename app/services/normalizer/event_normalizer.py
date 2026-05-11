@@ -17,18 +17,6 @@ def normalize_date(raw_date):
     
 
 
-print(
-    normalize_date(
-        "Fri, May 29, 12:30 PM GMT+2"
-    )
-)
-
-
-print(
-    normalize_date(
-        "Monday at 6:00 PM GMT+1"
-    )
-)
 
 
 
@@ -38,28 +26,68 @@ INTERNAL_CATEGORIES = {
         "science-and-tech",
         "tech",
         "computer-science",
-        "ai",
+        "AI",
         "machine-learning",
-        "data"
+        "data",
+        "programming",
+        "software-development",
+        "hardware",
+        "cybersecurity",
+        "blockchain",
+        "cryptocurrency",
+        "web-development",
+        "mobile-development",
+        "cloud-computing",
+        "devops",
+        "robotics",
+        "virtual-reality",
+        "augmented-reality",
+        "gaming",
+        "electronics"
     ],
 
-    "business": [
+    "career-business": [
         "business",
         "startup",
         "entrepreneurship",
-        "finance"
+        "finance",
+        "marketing",
+        "career-development",
+        "networking",
+        "professional-development",
+        "leadership",
+        "management",
+        "sales",
+        "product-management",
     ],
 
-    "education": [
+    "science-education": [
         "family-and-education",
         "education",
-        "learning"
+        "learning",
+        "science",
+        "math",
+        "history",
+        "language",
+        "philosophy",
+        "psychology",
+        "health-and-wellness",
+        "biology",
+        "chemistry",
+        "school"
     ],
 
-    "arts": [
+    "arts-culture": [
         "arts",
         "design",
-        "music"
+        "music",
+        "photography",
+        "writing",
+        "film",
+        "theater",
+        "literature",
+        "culture"
+
     ]
 }
 
