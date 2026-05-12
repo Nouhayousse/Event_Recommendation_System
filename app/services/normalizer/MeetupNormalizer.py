@@ -1,5 +1,9 @@
 from datetime import datetime
 import pytz
+from urllib.parse import urlparse
+
+from app.core.logger import logger
+
 
 
 class MeetupNormalizer:
@@ -11,8 +15,12 @@ class MeetupNormalizer:
         cleaned_date = raw_date.split("[")[0]
 
         parsed_date = datetime.fromisoformat(cleaned_date)
-        morocco_tz = pytz.timezone("Africa/Casablanca")
-        start_date = parsed_date.astimezone(morocco_tz)
+        #morocco_tz = pytz.timezone("Africa/Casablanca")
+        start_date = parsed_date.astimezone(pytz.timezone.utc)
+
+        logger.info(
+            f"Normalized date: {start_date}"
+        )
 
         event_format = (
             "online"
@@ -25,6 +33,11 @@ class MeetupNormalizer:
             if raw_event.get("is_online")
             else "Offline"
         )
+        raw_url = raw_event.get("url")
+        parsed_url = urlparse(raw_url)
+        clean_url=(
+            f"{parsed_url.scheme}://{parsed_url.netloc}{parsed_url.path}"
+        )
 
         normalized_event = {
 
@@ -32,7 +45,7 @@ class MeetupNormalizer:
 
             "source": "meetup",
 
-            "source_url": raw_event.get("url"),
+            "source_url": clean_url,
 
             "start_date": start_date,
 

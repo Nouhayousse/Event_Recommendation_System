@@ -1,3 +1,4 @@
+from app.core.logger import logger
 from app.models.seminar import Seminar
 
 
@@ -22,6 +23,9 @@ class MeetupMapper:
             start_date=normalized_event.get("start_date"),
 
             tags=normalized_event.get("tags")
+        )
+        logger.info(
+          f"Mapped seminar date: {seminar.start_date}"
         )
 
         return seminar

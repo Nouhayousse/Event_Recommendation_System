@@ -20,13 +20,13 @@ class Seminar(Base):
 
     UniqueConstraint(
         "source",
-        "external_event_id",
+        "source_url",
         name="unique_source_event"
     ),
     )
 
     id = Column(Integer, primary_key=True, index=True)
-    external_event_id = Column(String)
+    #external_event_id = Column(String)
 
     title = Column(String, nullable=False)
 
@@ -43,9 +43,9 @@ class Seminar(Base):
 
     is_expired = Column(Boolean, default=False)
 
-    start_date = Column(DateTime)
+    start_date = Column(DateTime(timezone=True))
 
-    end_date = Column(DateTime)
+    end_date = Column(DateTime(timezone=True), nullable=True)
 
     tags = Column(String)
 
