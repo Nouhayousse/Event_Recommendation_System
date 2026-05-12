@@ -16,7 +16,7 @@ class MeetupNormalizer:
 
         parsed_date = datetime.fromisoformat(cleaned_date)
         #morocco_tz = pytz.timezone("Africa/Casablanca")
-        start_date = parsed_date.astimezone(pytz.timezone.utc)
+        start_date = parsed_date.astimezone(pytz.UTC)
 
         logger.info(
             f"Normalized date: {start_date}"

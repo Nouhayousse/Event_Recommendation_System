@@ -1,23 +1,24 @@
+import re
+from datetime import datetime, timedelta
 from dateutil import parser
-
-def normalize_date(raw_date):
-
-    if not raw_date:
-        return None
-
-    try:
-
-        parsed_date = parser.parse(raw_date)
-
-        return parsed_date.isoformat()
-
-    except Exception:
-
-        return None
-    
+from zoneinfo import ZoneInfo
+import pytz
 
 
+TZINFOS = {
 
+    "EDT": -4 * 3600,
+    "EST": -5 * 3600,
+
+    "PDT": -7 * 3600,
+    "PST": -8 * 3600,
+
+    "CDT": -5 * 3600,
+    "CST": -6 * 3600,
+
+    "MDT": -6 * 3600,
+    "MST": -7 * 3600,
+}
 
 
 INTERNAL_CATEGORIES = {
@@ -87,70 +88,124 @@ INTERNAL_CATEGORIES = {
         "theater",
         "literature",
         "culture"
-
     ]
 }
 
-def normalize_title(title):
 
-    if not title:
+class EventbriteNormalizer:
+
+ def normalize_date(self, raw_date):
+
+    if not raw_date:
         return None
 
-    return title.strip()
+    try:
 
+        cleaned = raw_date.strip()
 
-def normalize_category(raw_category):
+        cleaned = re.sub(
+            r"\+\s*\d+\s*en plus",
+            "",
+            cleaned
+        )
 
-    if not raw_category:
+        if "Today" in cleaned:
+            today= datetime.now().strftime("%Y-%m-%d")
+            cleaned = cleaned.replace("Today", today)
+        if "Tomorrow" in cleaned:
+            tomorrow = (datetime.now() + timedelta(days=1)).strftime("%Y-%m-%d")
+            cleaned = cleaned.replace("Tomorrow", tomorrow)    
+
+        parsed_date = parser.parse(
+            cleaned,
+            fuzzy=True,
+            tzinfos=TZINFOS
+        )
+
+        morocco_timezone = ZoneInfo(
+            "Africa/Casablanca"
+        )
+
+        if parsed_date.tzinfo is None:
+
+            parsed_date = parsed_date.replace(
+                tzinfo=morocco_timezone
+            )
+
+        else:
+
+            parsed_date = parsed_date.astimezone(
+                morocco_timezone
+            )
+
+        return parsed_date
+
+    except Exception as e:
+
+        print(
+            f"Date normalization error: {e}"
+        )
+
+        return None
+
+ def normalize_title(self, title):
+
+        if not title:
+            return None
+
+        return title.strip()
+
+ def normalize_category(self, raw_category):
+
+        if not raw_category:
+            return "other"
+
+        raw_category = raw_category.lower()
+
+        for internal_cat, aliases in (
+            INTERNAL_CATEGORIES.items()
+        ):
+
+            if raw_category in aliases:
+                return internal_cat
+
         return "other"
 
-    raw_category = raw_category.lower()
+ def normalize_event(self, raw_event):
 
-    for internal_cat, aliases in (
-        INTERNAL_CATEGORIES.items()
-    ):
+        normalized_event = {
 
-        if raw_category in aliases:
-            return internal_cat
+            "external_id": raw_event.get(
+                "event_id"
+            ),
 
-    return "other"
+            "title": self.normalize_title(
+                raw_event.get("title")
+            ),
 
+            "url": raw_event.get("url"),
 
-def normalize_event(raw_event):
+            "date": self.normalize_date(
+                raw_event.get("date")
+            ),
 
-    normalized_event = {
+            "category": self.normalize_category(
+                raw_event.get("category")
+            ),
 
-        "external_id": raw_event.get(
-            "event_id"
-        ),
+            "source_category": raw_event.get(
+                "category"
+            ),
 
-        "title": normalize_title(
-            raw_event.get("title")
-        ),
+            "location_type": raw_event.get(
+                "location_type"
+            ),
 
-        "url": raw_event.get("url"),
+            "image_url": raw_event.get(
+                "image_url"
+            ),
 
-        "date": normalize_date(
-            raw_event.get("date")
-        ),
+            "source_platform": "eventbrite"
+        }
 
-        "category": normalize_category(
-            raw_event.get("category")
-        ),
-
-        "source_category": raw_event.get(
-            "category"
-        ),
-
-        "location_type": raw_event.get(
-            "location_type"
-        ),
-
-        "image_url": raw_event.get(
-            "image_url"
-        ),
-
-        "source_platform": "eventbrite"
-    }
-
-    return normalized_event
+        return normalized_event

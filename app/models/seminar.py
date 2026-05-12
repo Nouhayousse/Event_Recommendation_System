@@ -48,6 +48,7 @@ class Seminar(Base):
     end_date = Column(DateTime(timezone=True), nullable=True)
 
     tags = Column(String)
+    image_url = Column(Text, nullable=True)
 
     interactions = relationship(
         "Interaction",

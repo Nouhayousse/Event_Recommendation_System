@@ -5,7 +5,9 @@ celery_app = Celery(
     broker="redis://localhost:6379/0",
     backend="redis://localhost:6379/0",
     include=[
-        "app.tasks.meetup_tasks"
+        "app.tasks.meetup_tasks",
+        "app.tasks.eventbrite_tasks",
+        "app.tasks.maintenance_tasks"
     ]
 )
 
@@ -21,4 +23,8 @@ celery_app.conf.beat_schedule = {
         "task": "app.tasks.seminar_tasks.mark_expired_seminars_task",
         "schedule": 86400.0,
     },
-}
+    "scrape-eventbrite-every-6-hours": {
+        "task": "app.tasks.eventbrite_tasks.scrape_eventbrite_task",
+        "schedule": 6 * 3600.0,     
+    }    
+}   

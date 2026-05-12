@@ -1,30 +1,46 @@
 from app.models.seminar import Seminar
 
 
-def map_eventbrite_event(event: dict) -> Seminar:
+class EventbriteMapper:
 
-    seminar = Seminar(
+    def map_to_seminar(
+        self,
+        event: dict
+    ) -> Seminar:
 
-        title=event.get("title"),
+        location_type = event.get(
+            "location_type"
+        )
 
-        source="eventbrite",
+        seminar = Seminar(
 
-        source_url=event.get("url"),
+            title=event.get("title"),
 
-        location=event.get("location"),
+            source="eventbrite",
 
-        format=event.get("location_type"),
+            source_url=event.get("url"),
 
+            location=(
+                "Online"
+                if location_type == "online"
+                else "Offline"
+            ),
 
-        is_online=event.get("location_type") == "online",
+            format=location_type,
 
-        is_expired=False,
+            is_online=(
+                location_type == "online"
+            ),
 
-        start_date=event.get("date"),
+            is_expired=False,
 
-        end_date=event.get("end_date"),
+            start_date=event.get("date"),
 
-        tags=event.get("category")
-    )
+            end_date=event.get("end_date"),
 
-    return seminar
+            tags=event.get("category"),
+
+            image_url=event.get("image_url")
+        )
+
+        return seminar

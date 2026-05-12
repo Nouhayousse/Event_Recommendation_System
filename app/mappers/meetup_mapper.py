@@ -22,7 +22,8 @@ class MeetupMapper:
 
             start_date=normalized_event.get("start_date"),
 
-            tags=normalized_event.get("tags")
+            tags=normalized_event.get("tags"),
+            image_url=normalized_event.get("image_url")
         )
         logger.info(
           f"Mapped seminar date: {seminar.start_date}"
