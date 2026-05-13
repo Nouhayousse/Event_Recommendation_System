@@ -1,7 +1,14 @@
 from app.models.seminar import Seminar
 
+from datetime import datetime
+from zoneinfo import ZoneInfo
+
+
+
 
 class EventbriteMapper:
+
+    #now = datetime.now( ZoneInfo("Africa/Casablanca") )
 
     def map_to_seminar(
         self,
@@ -11,6 +18,10 @@ class EventbriteMapper:
         location_type = event.get(
             "location_type"
         )
+
+        #start_date = event.get("date")
+        #now=datetime.now( ZoneInfo("Africa/Casablanca") )
+        #is_expired = False
 
         seminar = Seminar(
 
@@ -32,9 +43,8 @@ class EventbriteMapper:
                 location_type == "online"
             ),
 
-            is_expired=False,
-
             start_date=event.get("date"),
+            is_expired=False,
 
             end_date=event.get("end_date"),
 

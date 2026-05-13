@@ -12,19 +12,20 @@ celery_app = Celery(
 )
 
 celery_app.conf.timezone = "Africa/Casablanca"
+celery_app.conf.enable_utc = True
 
 celery_app.conf.beat_schedule = {
-    "scrape-meetup-every-6-hours": {
+    "scrape-meetup-every-30-minutes": {
         "task": "app.tasks.meetup_tasks.scrape_meetup_task",
-        "schedule": 6 * 3600.0,
+        "schedule": 1800.0,
     },
 
-    "mark-expired-seminars-daily": {
-        "task": "app.tasks.seminar_tasks.mark_expired_seminars_task",
-        "schedule": 86400.0,
+    "mark-expired-seminars-every-10-minutes": {
+        "task": "app.tasks.maintenance_tasks.mark_expired_seminars_task",
+        "schedule": 600.0,
     },
-    "scrape-eventbrite-every-6-hours": {
+    "scrape-eventbrite-every-3-minutes": {
         "task": "app.tasks.eventbrite_tasks.scrape_eventbrite_task",
-        "schedule": 6 * 3600.0,     
+        "schedule": 180.0,     
     }    
 }   

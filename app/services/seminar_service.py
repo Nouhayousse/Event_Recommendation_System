@@ -23,40 +23,40 @@ def save_seminar(db: Session, seminar: Seminar):
         )
 
 
-        logger.info(f"Incoming date: {seminar.start_date}")
-        logger.info(f"Existing date: {existing.start_date}")
+        #logger.info(f"Incoming date: {seminar.start_date}")
+        #logger.info(f"Existing date: {existing.start_date}")
 
-        logger.info(
-         f"Incoming tzinfo: {seminar.start_date.tzinfo}"
-        )
+        #logger.info(
+         #f"Incoming tzinfo: {seminar.start_date.tzinfo}"
+        #)
 
-        logger.info(
-          f"Existing tzinfo: {existing.start_date.tzinfo}"
-        )
+        #logger.info(
+         # f"Existing tzinfo: {existing.start_date.tzinfo}"
+        #)
 
-        logger.info(
-         f"Incoming type: {type(seminar.start_date)}"
-        )
+        #logger.info(
+        # f"Incoming type: {type(seminar.start_date)}"
+        #)
 
-        logger.info(
-         f"Existing type: {type(existing.start_date)}"
-        )
+        #logger.info(
+        # f"Existing type: {type(existing.start_date)}"
+        #)
 
 
-        logger.info(
-          f"Incoming timestamp: "
-          f"{seminar.start_date.timestamp()}"
-        )
+        #logger.info(
+         # f"Incoming timestamp: "
+         # f"{seminar.start_date.timestamp()}"
+        #)
 
-        logger.info(
-          f"Existing timestamp: "
-          f"{existing.start_date.timestamp()}"
-       )
+        #logger.info(
+          #f"Existing timestamp: "
+          #f"{existing.start_date.timestamp()}"
+       #)
         if new_date != existing_date:
-            logger.info(
-              f"Equality result: "
-              f"{seminar.start_date == existing.start_date}"
-      )
+            #logger.info(
+            #  f"Equality result: "
+            #  f"{seminar.start_date == existing.start_date}"
+            #)
             existing.start_date = seminar.start_date
             db.commit()
             return "updated"
@@ -99,4 +99,16 @@ def save_multiple_seminars(
 
 def mark_expired_seminars(db):
 
-    
+    now = datetime.now(ZoneInfo("Africa/Casablanca"))
+
+    expired_seminars = db.query(Seminar).filter(
+        Seminar.is_expired == False
+    ).all()
+    updated=0
+
+    for seminar in expired_seminars:
+       if(seminar.start_date < now):
+           seminar.is_expired = True
+           updated+=1
+    db.commit()
+    print(f"Marked {updated} seminars as expired.")
