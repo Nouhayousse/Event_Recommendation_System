@@ -1,5 +1,7 @@
 from playwright.sync_api import sync_playwright
 
+from app.services.cache_service import is_event_cached
+from app.utils.url_utils import clean_url
 
 class MeetupConnector:
 
@@ -67,6 +69,16 @@ class MeetupConnector:
                         "a"
                         ).first.get_attribute("href")
 
+                        cleaned_url = clean_url(event_url)
+
+                        # Check cache before proceeding
+                        if is_event_cached(
+                            "meetup",
+                            cleaned_url
+                        ):
+                            print(f"Skipping cached event: {event_url}")
+                            continue
+
                         date = card.locator(
                             "time"
                         ).get_attribute("datetime")
@@ -81,7 +93,7 @@ class MeetupConnector:
 
                         event = {
                          "title": title,
-                         "url": event_url,
+                         "url": cleaned_url,
                          "date": date,
                          "image_url": image_url,
                          "is_online": is_online,

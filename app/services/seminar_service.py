@@ -3,6 +3,7 @@ from app.models.seminar import Seminar
 from datetime import datetime
 from zoneinfo import ZoneInfo
 from app.core.logger import logger
+from app.services.cache_service import cache_event
 
 
 
@@ -68,7 +69,16 @@ def save_seminar(db: Session, seminar: Seminar):
     db.add(seminar)
 
     db.commit()
+    cache_event(
+        seminar.source,
+        seminar.source_url,
+        {
+            "title": seminar.title,
+            "date": str(seminar.start_date)
+        }
+    )
 
+    logger.info(f"cached event: {seminar.title} from {seminar.source}")
 
     return "inserted"
 
