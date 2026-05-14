@@ -2,10 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 
 from app.connectors.base_connector import BaseConnector
-from app.services.cache_service import (
-    is_event_cached,
-    cache_event
-)
+from app.services.cache_service import is_event_cached
 
 
 class EventbriteConnector(BaseConnector):
