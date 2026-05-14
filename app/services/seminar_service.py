@@ -16,6 +16,11 @@ def save_seminar(db: Session, seminar: Seminar):
     ).first()
 
     if existing:
+        if seminar.start_date is None:
+            logger.warning(
+                f"Incoming seminar has no start date: {seminar.title} from {seminar.source}"
+            )
+            return "invalid"
         new_date = seminar.start_date.replace(
             microsecond=0
         )
@@ -93,6 +98,12 @@ def save_multiple_seminars(
     existed = 0
 
     for seminar in seminars:
+
+        if seminar.start_date is None:
+            logger.warning(
+                f"Skipping seminar with no start date: {seminar.title} from {seminar.source}"
+            )
+            continue
 
         result = save_seminar(db, seminar)
         if result == "inserted":

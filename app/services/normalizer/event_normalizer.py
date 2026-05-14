@@ -104,7 +104,7 @@ class EventbriteNormalizer:
         cleaned = raw_date.strip()
 
         cleaned = re.sub(
-            r"\+\s*\d+\s*en plus",
+            r"\+\s*\d+\s*(en plus|more)",
             "",
             cleaned
         )
